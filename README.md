@@ -11,3 +11,12 @@ serial:
   adapter: zboss
 ```
 
+At [releases](https://github.com/andryblack/esp-coordinator/releases) example firmware build for [WeAct Studio ESP32-C6-mini module](https://aliexpress.ru/item/1005006800070921.html)
+
+Flashing offsets:
+```
+0x0 bootloader.bin
+0x20000 esp-coordinator.bin
+0x8000 partition-table.bin
+0xf000 ota_data_initial.bin
+```

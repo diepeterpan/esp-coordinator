@@ -1,7 +1,7 @@
 name: GitHub Actions Build
 on:
   release:
-    types: [create]
+    types: [published]
 jobs:
   build:
     runs-on: ubuntu-latest
