@@ -2,6 +2,7 @@ name: GitHub Actions Build
 on:
   release:
     types: [published]
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,14 +14,20 @@ jobs:
     - name: esp-idf build
       uses: espressif/esp-idf-ci-action@v1
       with:
-        esp_idf_version: v5.3.1
+        esp_idf_version: v5.5
         target: esp32c6
         path: ''
     - name: archive artifact
+      working-directory: ./build
       run: |
-        zip build/esp-coordinator-escp32-c6-usb-${{ github.tag }}.zip build/bootloader/bootloader.bin \
-          build/esp-coordinator.bin build/ota_data_initial.bin partition_table/partition-table.bin
+        zip ../esp-coordinator-escp32-c6-usb-${{ github.event.release.tag_name }}.zip bootloader/bootloader.bin \
+          esp-coordinator.bin ota_data_initial.bin partition_table/partition-table.bin
     - name: upload release artifact   
       uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
       with:
-        path: build/esp-coordinator-escp32-c6-usb-${{ github.tag }}.zip
+        upload_url: ${{ github.event.release.upload_url }} 
+        asset_path: ./esp-coordinator-escp32-c6-usb-${{ github.event.release.tag_name }}.zip
+        asset_name: esp-coordinator-escp32-c6-usb-${{ github.event.release.tag_name }}.zip
+        asset_content_type: application/zip
